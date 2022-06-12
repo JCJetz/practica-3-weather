@@ -28,10 +28,6 @@ function Main() {
         }
     }, [])
     
-    
-
-    
-
     useEffect(() => {
         if (text) {
             fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${text}&limit=5&appid=${REACT_API_KEY}&lang=sp,es`)

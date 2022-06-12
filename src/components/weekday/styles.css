@@ -19,8 +19,6 @@
     background: url('../../assets/images/icon_sol.svg') 70% 70% no-repeat;
     height:60px;
     width:60px;
-    -webkit-filter: invert(.99); /* safari 6.0 - 9.0 */
-          filter: invert(.99);
 }
 
 .nublado {
@@ -28,40 +26,30 @@
     background: url('../../assets/images/icon_nube.svg') 70% 70% no-repeat;
     height:60px;
     width:60px;
-    -webkit-filter: invert(.99); /* safari 6.0 - 9.0 */
-          filter: invert(.99);
 }
 
 .tormenta {
     background: url('../../assets/images/icon_storm.svg') 70% 70% no-repeat;
     height:60px;
     width:60px;
-    -webkit-filter: invert(.99); /* safari 6.0 - 9.0 */
-          filter: invert(.99);
 }
 
 .lluvia {
     background: url('../../assets/images/icon_lluvia.svg') 70% 70% no-repeat;
     height:60px;
     width:60px;
-    -webkit-filter: invert(.99); /* safari 6.0 - 9.0 */
-          filter: invert(.99);
 }
 
 .nieve {
     background: url('../../assets/images/icon_snow.svg') 70% 70% no-repeat;
     height:60px;
     width:60px;
-    -webkit-filter: invert(.99); /* safari 6.0 - 9.0 */
-          filter: invert(.99);
 }
 
 .niebla {
     background: url('../../assets/images/icon_mist.svg') 70% 70% no-repeat;
     height:60px;
     width:60px;
-    -webkit-filter: invert(.99); /* safari 6.0 - 9.0 */
-          filter: invert(.99);
 }
 
 .day {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './styles.css'
 import logo1 from "../../assets/olassi.svg"
 import logo2 from "../../assets/olasno.svg"
 import Forecast from '../forecast';
@@ -12,8 +11,9 @@ import oneCloud from '../../assets/tiempo/nube.svg'
 import twoCloud from '../../assets/tiempo/dosnubes.svg'
 import storm from '../../assets/tiempo/tormenta.svg'
 import sunCloud from '../../assets/tiempo/nubesol.svg'
-import { Form } from 'react-bootstrap';
-import NextDays from '../next-days';
+import { FormCheck } from 'react-bootstrap';
+import './styles.css'
+import overwritebootstrap from './styles.css';
 
 
 
@@ -26,27 +26,72 @@ function Cards({ geoCode , text }) {
     const [cities, setCities] = useState({})
     const [temperature, setTemperature] = useState({})
     const [weatherIcon, setWeatherIcon] = useState(null)
+    const [sunriseSunset, setSunriseSunset] = useState({})
+    const [cityName, setCityName] = useState('')
+    const [forecastResponse, setForecast] = useState(false);
 
     const REACT_API_KEY = process.env.REACT_APP_API_KEY;
 
+    const t = new Date();
+    // fecha unix porque la pide la api de stormglass
+    const unixstart = parseInt((t.getTime() / 1000).toFixed(0));
+    // params a pasar a la api (cosas que usaremos)
+    const params = 'waveHeight,waveDirection,windSpeed,windDirection,humidity,wavePeriod,waterTemperature';
+    const STORMGLASS_KEY = `${process.env.REACT_APP_STORMGLASS_KEY}`;
+    // state para los resulados (params devueltos)
+    const [sgResponse, setSGResponse] = useState('');
+
     useEffect(() => {
+        
         if (geoCode[0]) {
-            fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${geoCode[0]?.lat}&lon=${geoCode[0]?.lon}&exclude=hourly&appid=${REACT_API_KEY}`)
+
+            fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${geoCode[0]?.lat}&lon=${geoCode[0]?.lon}&appid=${REACT_API_KEY}`)
 
 
                 .then(res => res.json())
                 .then(data => {
-                    setCities(data);
+                    setCityName(data[0]);
+                    console.log('reverse: ',data[0].name);
+                })
 
+            fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${geoCode[0]?.lat}&lon=${geoCode[0]?.lon}&exclude=hourly&appid=${REACT_API_KEY}`)
+    
+    
+                .then(res => res.json())
+                .then(data => {
+                    setCities(data);
+                    console.log('else: ',data);
+
+                    setSunriseSunset([data.daily[0]?.sunrise,data.daily[0]?.sunset]);
+    
                     const { current } = data;
                     setTemperature(prev => ({
                         ...prev,
                         value: current.temp,
                         type: 'C'
                     }))
-
+    
                     setWeatherIcon(current?.weather[0]?.icon)
                 })
+
+            fetch(`https://api.stormglass.io/v2/weather/point?lat=${geoCode[0]?.lat}&lng=${geoCode[0]?.lon}&start=${unixstart}&params=${params}`, {
+                    headers: {
+                    'Authorization': STORMGLASS_KEY
+                    }
+                }).then((response) => response.json()).then((jsonData) => {
+                    // solo la primera hora (actual)
+                    console.log('SGlass: ', jsonData.hours[0]);
+                    setSGResponse(jsonData.hours[0]);
+                });
+
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${geoCode[0]?.lat}&lon=${geoCode[0]?.lon}&appid=${REACT_API_KEY}`)
+                  .then(res => res.json())
+                  .then((data => {
+                      setForecast(data.list.slice(1,7));
+                      let sixdayforecast = data?.list?.slice(1,7);
+                      console.log(sixdayforecast);
+            }))
+
         }
     }, [geoCode])
 
@@ -109,7 +154,7 @@ function Cards({ geoCode , text }) {
     }
 
     const SurfIcon = () => {
-        if (geoCode[0]?.name === "Tarifa" || geoCode[0]?.name === "Dakar" || geoCode[0]?.name === "Laredo" || geoCode[0]?.name === "Santander") {
+        if (sgResponse.waveHeight) {
             return <img src={logo1} alt=""></img>
         } else {
             return <img src={logo2} alt=""></img>
@@ -127,7 +172,8 @@ function Cards({ geoCode , text }) {
             <div className='maincomp'>
                 <div className='col tempydatos'>
                     <div style={{ marginLeft: 60, width: 558, height: 500 }}>
-                        {text.length===0?<p className='title'>Madrid</p> :<p className='title'>{geoCode[0]?.name}</p>}
+                        <p className='title'>{cityName.name}</p>
+                        <p className='state'>({cityName.state})</p>
                         <p className='today'>{fechaMayuscula}</p>
                         <div className='weather-temperature'>
 
@@ -137,7 +183,7 @@ function Cards({ geoCode , text }) {
                                 <p className='grades' >{parseTemperature(temperature.value, temperature.type)}º</p>
                                 <div className='d-flex text-light toggle'>
                                     <span className='me-2'>ºC</span>
-                                    <Form.Check 
+                                    <FormCheck style={overwritebootstrap}
                                         type="switch"
                                         id="custom-switch"
                                         checked={temperature.type === 'F'}
@@ -153,16 +199,15 @@ function Cards({ geoCode , text }) {
                    {SurfIcon()}
                 </div>
             </div>
-            <div>
+            <div className='cardsContainer'>
                 <div className='row justify-content-center'>
-                 { geoCode[0]?.name === "Tarifa" || geoCode[0]?.name === "Dakar" || geoCode[0]?.name === "Laredo" || geoCode[0]?.name === "Santander" 
-                    ?<Forecast cities={cities} geoCode={geoCode}></Forecast>
-                    :""}
+                 { geoCode[0]
+                    ? <Forecast cities={cities} ss={sunriseSunset} sgResponse={sgResponse}></Forecast>
+                    : ""}
                 </div>
                 <p className='days-title'>PROXIMOS DIAS</p>
                 <div className='next-days'>
-
-                <NextDays cities={cities} ></NextDays>
+                    <Week forecastResponse={forecastResponse}></Week>
                 </div>
            
             </div>

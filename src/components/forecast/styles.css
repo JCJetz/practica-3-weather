@@ -57,3 +57,9 @@ p {
     display: flex;
     align-items: flex-end;
 }
+
+.watertemp {
+    background: url('../../assets/Icon_water_temp.svg') 70% 70% no-repeat;
+    height:60px;
+    width:60px;
+}
