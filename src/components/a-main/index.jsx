@@ -63,7 +63,7 @@ function Main() {
                             </div>
                         </div>
                         {geoCode.length === 0
-                            ? <div class="loadingContainer">
+                            ? <div className="loadingContainer">
                                 <div className='loading'>
                                     <div class="loading-wheel"></div>
                                 </div>
