@@ -30,18 +30,22 @@ function Cards({ geoCode , text }) {
     const [cityName, setCityName] = useState('')
     const [forecastResponse, setForecast] = useState(false);
 
-    const REACT_API_KEY = process.env.REACT_APP_API_KEY;
-
-    const t = new Date();
-    // fecha unix porque la pide la api de stormglass
-    const unixstart = parseInt((t.getTime() / 1000).toFixed(0));
-    // params a pasar a la api (cosas que usaremos)
-    const params = 'waveHeight,waveDirection,windSpeed,windDirection,humidity,wavePeriod,waterTemperature';
-    const STORMGLASS_KEY = `${process.env.REACT_APP_STORMGLASS_KEY}`;
+    
     // state para los resulados (params devueltos)
     const [sgResponse, setSGResponse] = useState('');
+    const [surfIcon, setSurfIcon] = useState(true);
+    const [pop, setPop] = useState('');
 
     useEffect(() => {
+
+        const REACT_API_KEY = process.env.REACT_APP_API_KEY;
+        const STORMGLASS_KEY = `${process.env.REACT_APP_STORMGLASS_KEY}`;
+        const t = new Date();
+        // fecha unix porque la pide la api de stormglass
+        const unixstart = parseInt((t.getTime() / 1000).toFixed(0));
+        // params a pasar a la api (cosas que usaremos)
+        const params = 'waveHeight,waveDirection,windSpeed,windDirection,humidity,wavePeriod,waterTemperature';
+
         
         if (geoCode[0]) {
 
@@ -63,6 +67,7 @@ function Cards({ geoCode , text }) {
                     console.log('else: ',data);
 
                     setSunriseSunset([data.daily[0]?.sunrise,data.daily[0]?.sunset]);
+                    setPop(data.daily[0]?.pop);
     
                     const { current } = data;
                     setTemperature(prev => ({
@@ -82,21 +87,23 @@ function Cards({ geoCode , text }) {
                     // solo la primera hora (actual)
                     console.log('SGlass: ', jsonData.hours[0]);
                     setSGResponse(jsonData.hours[0]);
-                });
+                    jsonData.hours[0].waveHeight ? setSurfIcon(true) : setSurfIcon(false);
 
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${geoCode[0]?.lat}&lon=${geoCode[0]?.lon}&appid=${REACT_API_KEY}`)
+                });
+            
+                
+
+            fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${geoCode[0]?.lat}&lon=${geoCode[0]?.lon}&exclude=hourly,current,minutely,alerts&appid=${REACT_API_KEY}`)
                   .then(res => res.json())
                   .then((data => {
-                      setForecast(data.list.slice(1,7));
-                      let sixdayforecast = data?.list?.slice(1,7);
-                      console.log(sixdayforecast);
+                      setForecast(data.daily.slice(1,7));
+                      //let sixdayforecast = data?.list?.slice(1,7);
+                      //console.log('Data sliced: ', data.daily.slice(1,7));
             }))
 
         }
     }, [geoCode])
 
-    let date = new Date()
-    const today = [date.getDate(), " ", date.getMonth() + 1, " ", date.getFullYear()];
 
     const getImageWeather = () => {
         switch (weatherIcon) {
@@ -153,8 +160,9 @@ function Cards({ geoCode , text }) {
         }))
     }
 
-    const SurfIcon = () => {
-        if (sgResponse.waveHeight) {
+    const SurfSwitch = () => {
+        console.log('Checking surfIcon: ', surfIcon);
+        if (surfIcon) {
             return <img src={logo1} alt=""></img>
         } else {
             return <img src={logo2} alt=""></img>
@@ -195,14 +203,14 @@ function Cards({ geoCode , text }) {
                         </div>
                     </div>
                 </div>
-                <div className='col'>
-                   {SurfIcon()}
+                <div className='col text-center'>
+                   {SurfSwitch()}
                 </div>
             </div>
             <div className='cardsContainer'>
                 <div className='row justify-content-center'>
                  { geoCode[0]
-                    ? <Forecast cities={cities} ss={sunriseSunset} sgResponse={sgResponse}></Forecast>
+                    ? <Forecast cities={cities} ss={sunriseSunset} pop={pop} sgResponse={sgResponse}></Forecast>
                     : ""}
                 </div>
                 <p className='days-title'>PROXIMOS DIAS</p>

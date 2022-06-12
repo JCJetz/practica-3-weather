@@ -30,6 +30,7 @@ function Weekday (props){
             <div className='weekday'>
                 <span className='day'>{dia}</span>
                 <span className={desc_tiempo}></span>
+                <span className='pop'>{(props.desc_tiempo.pop*100).toFixed()}%</span>
             </div>
 
         </>

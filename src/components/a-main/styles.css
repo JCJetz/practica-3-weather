@@ -13,6 +13,62 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.loadingContainer{
+    margin-top:80px;
+}
+.loading{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.loading-wheel {
+  animation: spin 1s infinite linear;
+  border: 2px solid #0B98B1;
+  border-left: 4px solid #fff;
+  border-radius: 50%;
+  height: 80px;
+  margin-bottom: 10px;
+  width: 80px;
+}
+
+.loading-text {
+  color: #fff;
+  font-family: arial, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.loading-text:after {
+  content: 'Cargando';
+  animation: load 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load {
+  0% {
+    content: 'Cargando';
+  }
+  33% {
+    content: 'Cargando.';
+  }
+  67% {
+    content: 'Cargando..';
+  }
+  100% {
+    content: 'Cargando...';
+  }
+}
+
 .cardsContainer{
     margin-top:180px;
 }
@@ -57,7 +113,7 @@
 
 
 .input {
-    width: 1113px;
+    width: 100%;
     height: 64px;
     border-radius: 75px;
     padding: 10px 16px 10px 16px;
@@ -91,6 +147,5 @@
 .waves {
     font-size: 50px;
     color: black;
-    padding-left: 90px;
     margin-top:20px;
 }

@@ -4,7 +4,7 @@
     margin-top: 30px;
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 20px;
     width: 1110px;
     align-items: center;
     justify-content: center;
@@ -34,7 +34,7 @@
 p {
     color: white;
     font-family: 'Rubik', sans-serif;
-    margin-bottom: 15px;
+    /* margin-bottom: 15px; */
     font-size: 24px;
 }
 

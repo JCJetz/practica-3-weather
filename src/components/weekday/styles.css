@@ -6,7 +6,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0px;
+    padding-top: 20px;
     gap: 64px;
     width: 171px;
     height: 252px;
@@ -63,4 +63,17 @@
     text-align: center;
     text-transform: uppercase;
     color: #FFFFFF;
+}
+
+.pop{
+    width: 163px;
+    height: 30px;
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 36px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #0B98B1;
 }

@@ -4,7 +4,7 @@ import Mapa from '../map';
 import Pictures from '../pictures';
 import Waves from '../../assets/waves.png';
 // import 'leaflet/dist/leaflet.css';
-import '../../assets/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './styles.css'
 
@@ -12,8 +12,6 @@ function Main() {
 
     const [geoCode, setGeoCode] = useState([])
     const [text, setText] = useState('')
-
-    const REACT_API_KEY = process.env.REACT_APP_API_KEY;
 
     // useEffect geolocalización
 
@@ -29,6 +27,9 @@ function Main() {
     }, [])
     
     useEffect(() => {
+
+        const REACT_API_KEY = process.env.REACT_APP_API_KEY;
+
         if (text) {
             fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${text}&limit=5&appid=${REACT_API_KEY}&lang=sp,es`)
                 .then(res => res.json())
@@ -51,7 +52,7 @@ function Main() {
             <div className='mainContainer'>
                 <div className='container'>
                     <div className='container-pic'>
-                        <img className='waves' src={Waves}/>
+                        <img className='waves' src={Waves} alt="Waves"/>
                         <div className='searchbar'>
                             <div className='row justify-content-center'>
                                 <input
@@ -62,7 +63,12 @@ function Main() {
                             </div>
                         </div>
                         {geoCode.length === 0
-                            ? <p>Cargando...</p>
+                            ? <div class="loadingContainer">
+                                <div className='loading'>
+                                    <div class="loading-wheel"></div>
+                                </div>
+                                <p class="loading-text"></p>
+                              </div>
                             : (
                                 <div className='content justify-content-center'>
                                     <Cards geoCode={geoCode} text={text}></Cards>

@@ -5,7 +5,7 @@
     gap: 16px;
     align-items: center;
     justify-content: center;
-    margin: 100px 0 90px 80px;
+    margin: 100px 0 90px 0;
 }
 .tempydatos{
     width: 494.67px;
@@ -31,15 +31,14 @@
     /* identical to box height */
     text-transform: uppercase;
     color: #FFFFFF;
-    font-size: 80px;
+    font-size: 60px;
+    margin-bottom: 0; 
 }
 
 .state{
-    font-family: 'Josefin Sans';
     font-style: normal;
-    font-size: 30px;
-    line-height: 30px;
-    /* identical to box height */
+    font-size: 22px;
+    line-height: 10px;
     color: #FFFFFF;
 }
 
